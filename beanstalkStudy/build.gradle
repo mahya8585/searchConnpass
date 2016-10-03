@@ -1,0 +1,58 @@
+group 'jp.aws.study.beanstalk'
+version '1.0.0'
+
+apply plugin: 'java'
+apply plugin: 'spring-boot'
+apply plugin: 'idea'
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE'
+    }
+}
+
+jar {
+    baseName = 'searchEvent'
+    manifest {
+        attributes 'Main-Class': 'jp.aws.study.beanstalk'
+    }
+}
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    providedRuntime
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web:1.4.0.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-websocket:1.4.0.RELEASE'
+    compile 'org.webjars:jquery:3.0.0'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf:1.4.0.RELEASE'
+    compile 'org.projectlombok:lombok:1.16.10'
+    compile 'org.jsoup:jsoup:1.8.3'
+
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.springframework:spring-test:2.5'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.12'
+}
