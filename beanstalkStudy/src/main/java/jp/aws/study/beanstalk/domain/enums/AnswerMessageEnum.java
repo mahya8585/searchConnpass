@@ -5,6 +5,7 @@ package jp.aws.study.beanstalk.domain.enums;
  */
 public enum AnswerMessageEnum {
     ASK("検索キーワードを入力してください。"),
+    NO_RESULT("検索結果は0件でした。"),
     SEARCH_ANSWER("検索結果の上位を表示します。");
 
     private final String message;
