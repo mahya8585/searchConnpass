@@ -19,7 +19,8 @@ public class ConnpassService {
 
     private static final String URL = "http://connpass.com/api/v1/event/?keyword_or=";
 
-    private static final String MESSAGE_PREFIX = "<div class='message_box'><p class='name_cs'>コンシェルジュ</p><div class='message_cs'>";
+    private static final String NAME = "コンシェルジュ";
+    private static final String MESSAGE_PREFIX = "<div class='message_box'><p class='name_cs'>" + NAME + "</p><div class='message_cs'>";
     private static final String MESSAGE_SUFFIX = "</div>";
     private static final String NEW_LINE = "<br/>";
 
@@ -28,7 +29,7 @@ public class ConnpassService {
         Document messageDocument = Jsoup.parse(messageHtml);
 
         //自分の発言の場合
-        if (messageDocument.getElementById("user_name").text().equals("コンシェルジュ")) {
+        if (messageDocument.getElementById("user_name").text().equals(NAME)) {
             return MESSAGE_PREFIX + AnswerMessageEnum.ASK.getMessage() + MESSAGE_SUFFIX + NEW_LINE;
         }
 
@@ -61,22 +62,28 @@ public class ConnpassService {
         answerMessage.append(MESSAGE_PREFIX);
 
         //検索結果文
-        answerMessage.append(AnswerMessageEnum.SEARCH_ANSWER.getMessage());
+        if (connpassData.getEvents().length == 0) {
+            answerMessage.append(AnswerMessageEnum.NO_RESULT.getMessage());
 
-        for (Event event : connpassData.getEvents()) {
-            answerMessage.append(NEW_LINE);
+        } else {
+            answerMessage.append(AnswerMessageEnum.SEARCH_ANSWER.getMessage());
 
-            answerMessage.append("<a href='")
-                    .append(event.getEvent_url())
-                    .append("' target='_blank'>")
-                    .append(event.getTitle())
-                    .append("[")
-                    .append(event.getStarted_at().substring(0, 10))
-                    .append("]</a>");
+            for (Event event : connpassData.getEvents()) {
+                answerMessage.append(NEW_LINE);
+
+                answerMessage.append("<a href='")
+                        .append(event.getEvent_url())
+                        .append("' target='_blank'>")
+                        .append(event.getTitle())
+                        .append("[")
+                        .append(event.getStarted_at().substring(0, 10))
+                        .append("]</a>");
+            }
         }
 
         //レコードの終了
         answerMessage.append(MESSAGE_SUFFIX);
         return answerMessage.toString();
     }
+
 }
